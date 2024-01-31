@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { Navbar, Sidebar, Footer } from './components'
 import styled from 'styled-components'
 
-import { Home, About, Cart, Checkout, Error, PrivateRoute, Products, SingleProduct } from './pages'
+import { Home, About, Cart, Checkout, Error, PrivateRoute, Products, SingleProduct, Login } from './pages'
 
 
 function App() {
@@ -20,6 +20,9 @@ function App() {
         </Route>
         <Route exact path='/cart'>
           <Cart />
+        </Route>
+        <Route exact path='/login'>
+          <Login />
         </Route>
         <Route exact path='/products'>
           <Products />

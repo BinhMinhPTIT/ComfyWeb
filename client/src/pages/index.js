@@ -6,5 +6,5 @@ import Cart from './CartPage';
 import Error from './ErrorPage';
 import Checkout from './CheckoutPage';
 import PrivateRoute from './PrivateRoute';
-
-export { Home, Products, SingleProduct, About, Checkout, PrivateRoute, Error, Cart };
+import Login from './Login';
+export { Home, Products, SingleProduct, About, Checkout, PrivateRoute, Error, Cart, Login };
