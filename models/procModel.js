@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const mongoosePaginate = require('mongoose-paginate-v2');
+import { Schema, Types, model } from 'mongoose';
+// import mongoosePaginate from 'mongoose-paginate-v2';
 
-const procSchema = new mongoose.Schema(
+const procSchema = new Schema(
     {
         name: {
             type: String,
@@ -63,12 +63,11 @@ const procSchema = new mongoose.Schema(
             required: [true, 'Please provide the number of processors'],
         },
         createdBy: {
-            type: mongoose.Types.ObjectId,
+            type: Types.ObjectId,
             ref: 'User',
         },
     },
     { timestamps: true }
 );
 
-procSchema.plugin(mongoosePaginate);
-module.exports = mongoose.model('Product', procSchema);
+export default model('Proc', procSchema);

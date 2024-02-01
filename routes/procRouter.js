@@ -1,33 +1,25 @@
 import { Router } from 'express';
 const router = Router();
+
+import { getAllProcs, getProc, createProc, updateProc, deleteProc } from '../controllers/procController.js';
+
 import {
-  getAllJobs,
-  getJob,
-  createJob,
-  updateJob,
-  deleteJob,
-  showStats,
-} from '../controllers/jobController.js';
-import {
-  validateJobInput,
+  validateProcInput,
   validateIdParam,
 } from '../middleware/validationMiddleware.js';
 import { checkForTestUser } from '../middleware/authMiddleware.js';
 
-// router.get('/',getAllJobs)
-// router.post('/',createJob)
-
 router
   .route('/')
-  .get(getAllJobs)
-  .post(checkForTestUser, validateJobInput, createJob);
+  .get(getAllProcs)
+  .post(checkForTestUser, validateProcInput, createProc);
 
-router.route('/stats').get(showStats);
+// router.route('/stats').get(showStats);
 
 router
   .route('/:id')
-  .get(validateIdParam, getJob)
-  .patch(checkForTestUser, validateJobInput, validateIdParam, updateJob)
-  .delete(checkForTestUser, validateIdParam, deleteJob);
+  .get(validateIdParam, getProc)
+  .patch(checkForTestUser, validateProcInput, validateIdParam, updateProc)
+  .delete(checkForTestUser, validateIdParam, deleteProc);
 
 export default router;

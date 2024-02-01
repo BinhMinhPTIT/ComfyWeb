@@ -1,8 +1,10 @@
-const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+import { Schema, model } from 'mongoose';
+// import { sign } from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 
-const UserSchema = new mongoose.Schema({
+const { genSalt, hash, compare } = bcrypt;
+
+const UserSchema = new Schema({
     name: {
         type: String,
         required: [true, 'Please provide a name'],
@@ -20,7 +22,7 @@ const UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        require: [true, 'Please provide a valid password'],
+        required: [true, 'Please provide a valid password'], // Fixed the typo here
         minlength: 6,
     },
     role: {
@@ -30,13 +32,19 @@ const UserSchema = new mongoose.Schema({
     },
 });
 
-UserSchema.pre('save', async function() {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+UserSchema.pre('save', async function(next) {
+    try {
+        const salt = await genSalt(10);
+        const hashedPassword = await hash(this.password, salt);
+        this.password = hashedPassword;
+        next();
+    } catch (error) {
+        next(error);
+    }
 });
 
 UserSchema.methods.createJWT = function() {
-    return jwt.sign(
+    return sign(
         { userId: this._id, name: this.name, role: this.role },
         process.env.JWT_SECRET,
         {
@@ -46,8 +54,12 @@ UserSchema.methods.createJWT = function() {
 };
 
 UserSchema.methods.comparePassword = async function(candidatePassword) {
-    const isMatch = await bcrypt.compare(candidatePassword, this.password);
-    return isMatch;
+    try {
+        const isMatch = await compare(candidatePassword, this.password);
+        return isMatch;
+    } catch (error) {
+        return false;
+    }
 };
 
-module.exports = mongoose.model('User', UserSchema);
+export default model('User', UserSchema);
